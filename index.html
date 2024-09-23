@@ -11,17 +11,28 @@
     <!--navbar design-->
 
       <nav class="container mx-auto flex justify-between items-center p-4 navbar bg-base-100">
-        <div>
-          <button class="text-xl font-bold btn bg-[#B4F461] rounded">Blog</button>
+        <!--Responsive Menu Icon by Mobile screen-->
+        <div class="flex md:hidden">
+          <button class="w-10 h-10"><img src="./assets/menu-icon.png" alt=""></button>
         </div>
-        <div class="flex items-center">
+        <!--Blog Button -->
+        <div class="hidden md:block">
+          <button class="text-xl font-bold btn bg-[#B4F461]  rounded">Blog</button>
+        </div>
+        <!--Logo -->
+        <div class="flex lg:items-center md:items-start">
           <img src="./assets/logo.png" alt="">
           <p class="ml-4 text-xl font-bold">Donate Bangladesh</p>
         </div>
-        <div class="flex items-center">
+        <!--Coin/tk -->
+        <div class="hidden md:flex items-center">
           <img src="./assets/coin.png" alt="">
           <p class="ml-4 text-xl font-bold">5500</p>
         </div>
+        <!--menu handle-->
+
+
+
       </nav>
       
 </body>
