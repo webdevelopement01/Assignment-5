@@ -13,7 +13,7 @@
       <nav class="container mx-auto flex justify-between items-center p-4 navbar bg-base-100">
         <!--Responsive Menu Icon by Mobile screen-->
         <div class="flex md:hidden">
-          <button class="w-10 h-10"><img src="./assets/menu-icon.png" alt=""></button>
+          <button id="menu-btn" class="w-10 h-10"><img src="./assets/menu-icon.png" alt=""></button>
         </div>
         <!--Blog Button -->
         <div class="hidden md:block">
@@ -29,11 +29,21 @@
           <img src="./assets/coin.png" alt="">
           <p class="ml-4 text-xl font-bold">5500</p>
         </div>
-        <!--menu handle-->
-
-
-
       </nav>
+      <!--menu handle-->
+      <div id="mobile-scren-menu-btn" class="hidden md:hidden flex-col bg-base-100 p-4">
+        <button class="text-xl font-bold btn bg-[#B4F461] rounded mb-4">Blog</button>
+        <div class="flex items-center mb-4">
+          <img src="./assets/coin.png" alt="Coin" class="h-6 w-6">
+          <p class="ml-4 text-xl font-bold">5500</p>
+        </div>
+      </div>
+      
+      <script src="js/javascriptcode.js"></script>
+
+      <script>
+        
+      </script>
       
 </body>
 </html>
