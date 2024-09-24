@@ -1,71 +1,118 @@
-/**Responsive navbar design  */
-const mobileBtn = document.getElementById('mobile-scren-menu-btn');
-const menuBtn = document.getElementById('menu-btn').addEventListener('click',() =>{
-    mobileBtn.classList.toggle('hidden')
+
+// Responsive menu toggle
+const mobileBtn = document.getElementById('mobile-screen-menu-btn');
+const menuBtn = document.getElementById('menu-btn').addEventListener('click', () => {
+    mobileBtn.classList.toggle('hidden');
 });
 
-//*************************** */
-let totalBalance = 5500;
-    const historyList = document.getElementById('history-list');
+// Close menu when clicking outside of it
+document.addEventListener('click', function(event) {
+    const menu = document.getElementById('mobile-screen-menu-btn');
+    const menuButton = document.getElementById('menu-btn');
+    
+    if (!menu.contains(event.target) && !menuButton.contains(event.target)) {
+        menu.classList.add('hidden');
+    }
+});
 
-    // Function to handle donations
-    function handleDonation(donateButtonId, donationInputId, donationDisplayId, initialAmount, donationTitle) {
-      document.getElementById(donateButtonId).addEventListener('click', function() {
-        const donationInput = document.getElementById(donationInputId).value;
-        const donationAmount = parseFloat(donationInput);
+// Initial donation values
+let noakhaliDonated = 0;
+let feniDonated = 600;
+let quotaDonated = 2400;
+let totalBalance = parseFloat(document.getElementById('total-balance').innerText);
 
-        if (isNaN(donationAmount)) {
-          alert('Please enter a valid number for the donation.');
-        } else if (donationAmount <= 0) {
-          alert('Donation amount must be greater than 0.');
-        } else if (donationAmount > totalBalance) {
-          alert('Insufficient balance for this donation.');
+// Function to handle donations
+function handleDonation(btnId, inputId, displayId, donationTracker, donationType) {
+    const btn = document.getElementById(btnId);
+    btn.addEventListener('click', () => {
+        const amount = parseFloat(document.getElementById(inputId).value);
+        
+        if (!isNaN(amount) && amount > 0) {
+            if (amount > totalBalance) {
+                alert('Insufficient balance.');
+                return;
+            }
+
+            donationTracker += amount;
+            totalBalance -= amount;
+
+            // Update the display of donated amount and total balance
+            document.getElementById(displayId).innerText = donationTracker + ' BDT';
+            document.getElementById('total-balance').innerText = totalBalance + ' BDT';
+            
+            // Add the donation to history
+            addToHistory(donationType, amount);
+            showModal();
         } else {
-          totalBalance -= donationAmount;
-          initialAmount += donationAmount;
-          
-          document.getElementById('total-balance').innerText = totalBalance + ' BDT';
-          document.getElementById(donationDisplayId).innerText = initialAmount + ' BDT';
-
-          const currentDateTime = new Date();
-          const formattedDateTime = currentDateTime.toLocaleString();
-
-          const listItem = document.createElement('li');
-          listItem.textContent = `Donated ${donationAmount} BDT for ${donationTitle} on ${formattedDateTime}`;
-          historyList.appendChild(listItem);
-
-          // Show congratulations modal
-          document.getElementById('congratulations-card').classList.remove('hidden');
+            alert('Please enter a valid amount.');
         }
 
-        document.getElementById(donationInputId).value = '';
-      });
-    }
+        // Clear the input field
+        document.getElementById(inputId).value = '';
+    });
+}
 
-    // Initialize donation functionality for each card
-    handleDonation('donate-btn-1', 'donation-amount-1', 'donated-noakhali', 0, 'Flood at Noakhali');
-    handleDonation('donate-btn-2', 'donation-amount-2', 'donated-feni', 600, 'Flood Relief in Feni');
-    handleDonation('donate-btn-3', 'donation-amount-3', 'donated-quota', 2400, 'Aid for Injured in the Quota Movement');
+// Initialize donation functionality for each campaign
+handleDonation('donate-btn-1', 'donation-amount-1', 'donated-noakhali', noakhaliDonated, 'Flood at Noakhali');
+handleDonation('donate-btn-2', 'donation-amount-2', 'donated-feni', feniDonated, 'Flood Relief in Feni');
+handleDonation('donate-btn-3', 'donation-amount-3', 'donated-quota', quotaDonated, 'Aid for Injured in the Quota Movement');
 
-    // Handle tab switching between Donation and History
-    document.getElementById('donation-tab').addEventListener('click', function() {
-      document.getElementById('donation-section').classList.remove('hidden');
-      document.getElementById('history-section').classList.add('hidden');
-      this.classList.add('active-button');
-      document.getElementById('history-tab').classList.remove('active-button');
-      document.getElementById('history-tab').classList.add('inactive-button');
+// Function to add a donation to the history
+function addToHistory(type, amount) {
+    const historyList = document.getElementById('history-list');
+    const newItem = document.createElement('li');
+    
+    // Get the current time and format it
+    const currentTime = new Date();
+    const formattedTime = currentTime.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true,
+        timeZone: 'Asia/Dhaka' // For Bangladesh Time
     });
 
-    document.getElementById('history-tab').addEventListener('click', function() {
-      document.getElementById('donation-section').classList.add('hidden');
-      document.getElementById('history-section').classList.remove('hidden');
-      this.classList.add('active-button');
-      document.getElementById('donation-tab').classList.remove('active-button');
-      document.getElementById('donation-tab').classList.add('inactive-button');
-    });
+    // Add the donation entry to the list with date and time
+    newItem.innerHTML = `Donated ${amount} BDT to ${type} <br> ${formattedTime}`;
+    historyList.appendChild(newItem);
+}
 
-    // Close the congratulations modal
-    document.getElementById('close-modal').addEventListener('click', function() {
-      document.getElementById('congratulations-card').classList.add('hidden');
-    });
+// Modal functionality for donation confirmation
+const modal = document.getElementById('congratulations-card');
+const closeModalBtn = document.getElementById('close-modal');
+closeModalBtn.addEventListener('click', () => {
+    modal.classList.add('hidden');
+});
+
+function showModal() {
+    modal.classList.remove('hidden');
+}
+
+// Tab switching between Donation and History
+const donationTab = document.getElementById('donation-tab');
+const historyTab = document.getElementById('history-tab');
+const donationSection = document.getElementById('donation-section');
+const historySection = document.getElementById('history-section');
+
+// Switching tabs
+donationTab.addEventListener('click', () => {
+    donationSection.classList.remove('hidden');
+    historySection.classList.add('hidden');
+    donationTab.classList.add('active-button');
+    donationTab.classList.remove('inactive-button');
+    historyTab.classList.remove('active-button');
+    historyTab.classList.add('inactive-button');
+});
+
+historyTab.addEventListener('click', () => {
+    donationSection.classList.add('hidden');
+    historySection.classList.remove('hidden');
+    historyTab.classList.add('active-button');
+    historyTab.classList.remove('inactive-button');
+    donationTab.classList.remove('active-button');
+    donationTab.classList.add('inactive-button');
+});
 
